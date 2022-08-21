@@ -1,0 +1,80 @@
+###############################################################################
+#                          Generated on liqiankun                             #
+###############################################################################
+version: "3.1"
+services:
+  nginx:
+    image: ${IMAGE_NAMESPACE}${NGINX_IMAGE_TAG}
+    container_name: lnmp-nginx
+    working_dir: /application
+    volumes:
+      - ./www:/application
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+       - "8080:80"
+      #  - "443:443"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - mynet
+
+  php-fpm:
+    image: ${IMAGE_NAMESPACE}${PHP_IMAGE_TAG}
+    container_name: lnmp-php-fpm
+    working_dir: /application
+    volumes:
+      - ./www:/application
+      - ./config/php/${PHP_VERSION}/conf.d/over-php.ini:/usr/local/etc/php/conf.d/over-php.ini
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - mynet
+
+  redis:
+    image: ${IMAGE_NAMESPACE}${REDIS_IMAGE_TAG}
+    container_name: lnmp-redis
+    working_dir: /usr/local/redis/6.2.4
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - "6379:6379"
+    networks:
+      - mynet
+
+  mysql:
+    image: ${IMAGE_NAMESPACE}${MYSQL_IMAGE_TAG}
+    container_name: lnmp-mysql8
+    working_dir: /application
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./data/mysql/${MYSQL_VERSION}:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=liqiankun
+      - MYSQL_USER=root2
+      - MYSQL_PASSWORD=root2
+    user: ${UID}:${GID} 
+    ports:
+      - "3306:3306"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - mynet
+
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: --interval 30  --label-enable
+  #   labels:
+  #   - "com.centurylinklabs.watchtower.enable=true"
+  #   networks:
+  #     - mynet
+
+networks:
+  mynet:
+    driver: bridge
