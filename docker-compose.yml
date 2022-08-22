@@ -5,7 +5,7 @@ version: "3.1"
 services:
   nginx:
     image: ${IMAGE_NAMESPACE}${NGINX_IMAGE_TAG}
-    container_name: lnmp-nginx
+    container_name: nginx
     working_dir: /application
     volumes:
       - ./www:/application
@@ -21,7 +21,7 @@ services:
 
   php-fpm:
     image: ${IMAGE_NAMESPACE}${PHP_IMAGE_TAG}
-    container_name: lnmp-php-fpm
+    container_name: php-fpm
     working_dir: /application
     volumes:
       - ./www:/application
@@ -34,7 +34,7 @@ services:
   redis:
     image: ${IMAGE_NAMESPACE}${REDIS_IMAGE_TAG}
     container_name: lnmp-redis
-    working_dir: /usr/local/redis/6.2.4
+    working_dir: /application
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     ports:
@@ -44,7 +44,7 @@ services:
 
   mysql:
     image: ${IMAGE_NAMESPACE}${MYSQL_IMAGE_TAG}
-    container_name: lnmp-mysql8
+    container_name: mysql8
     working_dir: /application
     command:
       - --default-authentication-plugin=mysql_native_password
@@ -65,6 +65,39 @@ services:
     networks:
       - mynet
 
+  node-server:
+    image: ${IMAGE_NAMESPACE}${NODE_IMAGE_TAG}
+    container_name: node
+    entrypoint: sh
+    working_dir: /application
+    volumes:
+      - ./www:/application
+    ports:
+      - "3000:3000"  
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    command:
+      - -c
+      - |
+        tail -f /dev/null
+    networks:
+      - mynet
+
+  golang:
+    image: liqiankun/golang:1.19-alpine3.16
+    container_name: golang
+    working_dir: /application
+    volumes:
+      - ./www:/application
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    entrypoint: sh  
+    command:
+      - -c
+      - |
+        tail -f /dev/null  
+    networks:
+      - mynet
   # watchtower:
   #   image: containrrr/watchtower
   #   volumes:
