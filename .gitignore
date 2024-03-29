@@ -1,4 +1,5 @@
 /www/*
+!/www/readme.md
 /data/*
 /log/*
 .vscode
