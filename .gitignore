@@ -1,3 +1,8 @@
 /www/*
 /data/*
 /log/*
+.vscode
+.idea
+.fleet
+.gitignore
+/config/nginx/conf.d/vhost/*.conf
