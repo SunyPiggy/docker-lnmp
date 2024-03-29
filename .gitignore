@@ -6,3 +6,4 @@
 .fleet
 .gitignore
 /config/nginx/conf.d/vhost/*.conf
+.env

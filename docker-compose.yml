@@ -13,7 +13,7 @@ services:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
     ports:
        - "80:80"
-      #  - "443:443"
+       - "443:443"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
