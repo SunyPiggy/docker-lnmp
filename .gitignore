@@ -7,3 +7,5 @@
 .fleet
 .gitignore
 /config/nginx/conf.d/vhost/*.conf
+/config/nginx/conf.d/cert/*
+!/config/nginx/conf.d/cert/readme.md
