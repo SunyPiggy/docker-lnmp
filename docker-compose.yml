@@ -25,7 +25,6 @@ services:
     user: "www-data"
     volumes:
       - ./www:/var/www/html
-      - /home/lb/work/development/demo-test:/var/www/html/demo-test
       - ./config/php/${PHP_VERSION}/conf.d/over-php.ini:/usr/local/etc/php/conf.d/over-php.ini
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
